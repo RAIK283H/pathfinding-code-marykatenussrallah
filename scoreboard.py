@@ -96,6 +96,8 @@ class Scoreboard:
                 if player_object.player_config_data == player_configuration_info:
                     display_element.text = "Excess Distance Traveled: " + str(max(0, int(player_object.distance_traveled-self.distance_to_exit)))
 
+    
+
     def update_scoreboard(self):
         self.update_elements_locations()
         self.update_paths()

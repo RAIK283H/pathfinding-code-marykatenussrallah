@@ -2,7 +2,6 @@ import graph_data
 import global_game_data
 from numpy import random
 import numpy as np
-import config_data
 
 def set_current_graph_paths():
     global_game_data.graph_paths.clear()
@@ -25,7 +24,6 @@ def get_random_path():
     randomPath.append(currStartNode)
     neighborIndex = currStartNode
     neighbors = currGraph[neighborIndex][1]
-    print(f"neighbors: {neighbors} type: {type(neighbors)}")
     while currEndNode not in randomPath or currTargetNodeIndex not in randomPath:
         nextNode = random.choice(neighbors)
         if isinstance(nextNode, (list, np.integer)):
