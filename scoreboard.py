@@ -111,6 +111,28 @@ class Scoreboard:
         for index in range(len(config_data.player_data)):
             nodes_visited = len(global_game_data.graph_paths[index])
             self.player_nodes_display[index][0].text = "Amount Nodes Visited: " + str(nodes_visited)
+
+    def find_winner(self):
+        min_distance_traveled = 100000
+        winner_index = -1
+        for i, player_object in enumerate(global_game_data.player_objects):
+            if player_object.player_config_data[0] == "Test Player" and not player_object.reached_target:
+                continue
+            distance_traveled = player_object.distance_traveled
+
+            if distance_traveled < min_distance_traveled:
+                min_distance_traveled = distance_traveled
+                winner_index = i
+        return winner_index, min_distance_traveled
+    
+    def __init__(self, batch, group):
+        self.completed_traversals = [False] * len(config_data.player_data)
+
+    def mark_player_done(self, player_index):
+        self.completed_traversals[player_index] = True
+
+    def all_players_completed(self):
+        return all(self.completed_traversals)
         
 
     def update_scoreboard(self):
@@ -119,3 +141,10 @@ class Scoreboard:
         self.update_distance_to_exit()
         self.update_distance_traveled()
         self.update_nodes_visited()
+        if self.all_players_completed():
+            winner_index, winning_distance = self.find_winner()
+            if winner_index != -1:
+                winner_name = config_data.player_data[winner_index][0]
+                print(f"The winner is {winner_name} with a distance of {winning_distance}!")
+            self.completed_traversals = [False] *len(config_data.player_data)
+        

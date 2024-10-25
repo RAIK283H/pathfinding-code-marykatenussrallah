@@ -34,29 +34,60 @@ def get_random_path():
         if neighborIndex < len(currGraph):
             neighborIndex = nextNode
             neighbors = currGraph[neighborIndex][1]
-    return randomPath
+    return [1,2]
 
 
-def get_dfs_path():
+def get_dfs_path():   
     curr_graph = graph_data.graph_data[global_game_data.current_graph_index]
     curr_node_index = 0
     target_node_index = global_game_data.target_node[global_game_data.current_graph_index]
+    print(f"curr_target_node_index: {target_node_index}")
     end_node_index = len(curr_graph) - 1
     dfs_stack = deque([curr_node_index])
-    visited = set()
-    dfs_path = []
-    while end_node_index not in dfs_stack or target_node_index not in dfs_stack:
+    visited = set([curr_node_index])
+    prev_node = {curr_node_index: None}
+    while dfs_stack:
          node = dfs_stack.pop()
-         if node not in visited:
-              visited.add(node)
-              dfs_path.append(node)
-              for neighbor in reversed(curr_graph[node][1]):
-                   if neighbor not in visited:
-                        dfs_stack.append(neighbor)
-    dfs_path.append(end_node_index)
-    assert dfs_path[-1] == end_node_index, "Error: DFS path doesn't end at the end node"
-    # for i in range(len(dfs_path) - 1):
-    #     assert dfs_path[i+1] in curr_graph[dfs_path[i][1]], f"Error: no edge between {dfs_path[i]} and {dfs_path[i+1]} in DFS path."
+         if node == target_node_index:
+              break
+         for neighbor in reversed(curr_graph[node][1]):
+              if neighbor not in visited:
+                visited.add(neighbor)
+                dfs_stack.append(neighbor)
+                prev_node[neighbor] = node
+
+    dfs_path = []
+    node = target_node_index
+    while node is not None:
+         dfs_path.append(node)
+         node = prev_node.get(node)
+    dfs_path.reverse()
+    assert dfs_path[-1] == target_node_index, "Error: DFS path to the target doesn't end with the target"
+    dfs_stack = deque([target_node_index])
+    visited = set([target_node_index])
+    prev_node = {target_node_index: None}
+    while dfs_stack:
+         node = dfs_stack.pop()
+         if node == end_node_index:
+              break
+         for neighbor in reversed(curr_graph[node][1]):
+              if neighbor not in visited:
+                visited.add(neighbor)
+                dfs_stack.append(neighbor)
+                prev_node[neighbor] = node
+    dfs_path_to_end = []
+    node = end_node_index
+    while node is not None:
+         dfs_path_to_end.append(node)
+         node = prev_node.get(node)
+    dfs_path_to_end.reverse()
+    assert dfs_path_to_end[-1] == end_node_index, "Error: DFS path doesn't end at the end node"
+    for path in dfs_path_to_end[1:]:
+         dfs_path.append(path)
+    for i in range(len(dfs_path) - 1):
+        current_node = dfs_path[i]
+        next_node = dfs_path[i+1]
+        assert next_node in curr_graph[current_node][1], f"Error: no edge between {current_node} and {next_node} in DFS path."
     return dfs_path
 
 
@@ -65,30 +96,53 @@ def get_bfs_path():
     curr_node_index = 0
     target_node_index = global_game_data.target_node[global_game_data.current_graph_index]
     end_node_index = len(curr_graph)-1
-    bfs_stack = deque([curr_node_index])
-    visited = set()
+    bfs_queue = deque([curr_node_index])
+    visited = set([curr_node_index])
+    prev_node = {curr_node_index: None}
+    while bfs_queue:
+         curr_node = bfs_queue.popleft()
+         if curr_node == target_node_index:
+              break
+         for neighbor in curr_graph[curr_node][1]:
+              if neighbor not in visited:
+                   visited.add(neighbor)
+                   bfs_queue.append(neighbor)
+                   prev_node[neighbor] = curr_node
     bfs_path = []
-    while end_node_index not in bfs_stack or target_node_index not in bfs_stack:
-        node = bfs_stack.popleft()
-        if node == end_node_index:
-            bfs_path.append(node)
-            break
-        if node not in visited:
-            visited.add(node)
-            bfs_path.append(node)
-            for neighbor in curr_graph[node][1]:
-                if neighbor not in visited:
-                    bfs_stack.append(neighbor)
-    # assert bfs_path[-1] == end_node_index, "Error: BFS path doesn't end at the end node"
-    # for i in range(len(bfs_path) - 1):
-    #     assert bfs_path[i+1] in curr_graph[bfs_path[i][1]], f"Error: no edge between {bfs_path[i]} and {bfs_path[i+1]} in BFS path."
+    node = target_node_index
+    while node is not None:
+         bfs_path.append(node)
+         node = prev_node.get(node)
+    bfs_path.reverse()
+    assert target_node_index in bfs_path, "Error: did not pass postcondition. Target node not in BFS path"
+    bfs_queue = deque([target_node_index])
+    visited = set([target_node_index])
+    prev_node = {target_node_index: None}
+
+    while bfs_queue:
+         curr_node = bfs_queue.popleft()
+         if curr_node == end_node_index:
+              break
+         for neighbor in curr_graph[curr_node][1]:
+              if neighbor not in visited:
+                   visited.add(neighbor)
+                   bfs_queue.append(neighbor)
+                   prev_node[neighbor] = curr_node
+    target_to_exit_path = []
+    node = end_node_index
+    while node is not None:
+         target_to_exit_path.append(node)
+         node = prev_node.get(node)
+    target_to_exit_path.reverse()
+    for path in target_to_exit_path[1:]:
+         bfs_path.append(path)
+    assert bfs_path[-1] == end_node_index, "Error: did not pass postcondition. BFS path doesn't end with the end node"
+    for i in range(len(bfs_path) - 1):
+         assert bfs_path[i+1] in curr_graph[bfs_path[i]][1], f"Error: didn't pass postcondition. Not all connected nodes in BFS path are direct neighbors"
     return bfs_path
 
 
 def get_dijkstra_path():
     return [1,2]
 
-# def get_randomly_generated_path():
-#     index1 = random.randint(0, len(graph_data.graph_data) - 1)
-#     index2 = graph_data.graph_data[index1][random.randint(0, len(graph_data.graph_data[index1])-1)]
-#     return [index1, index2]
+
