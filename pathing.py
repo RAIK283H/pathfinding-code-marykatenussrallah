@@ -41,7 +41,6 @@ def get_dfs_path():
     curr_graph = graph_data.graph_data[global_game_data.current_graph_index]
     curr_node_index = 0
     target_node_index = global_game_data.target_node[global_game_data.current_graph_index]
-    print(f"curr_target_node_index: {target_node_index}")
     end_node_index = len(curr_graph) - 1
     dfs_stack = deque([curr_node_index])
     visited = set([curr_node_index])

@@ -21,6 +21,8 @@ class Scoreboard:
         self.number_of_stats = 5
         self.base_height_offset = 20
         self.font_size = 16
+        self.completed_traversals = [False] * len(config_data.player_data)
+
         self.distance_to_exit_label = pyglet.text.Label('Direct Distance To Exit : 0', x=0, y=0,
                                                         font_name='Arial', font_size=self.font_size, batch=batch, group=group)
         self.distance_to_exit = 0
@@ -124,9 +126,6 @@ class Scoreboard:
                 min_distance_traveled = distance_traveled
                 winner_index = i
         return winner_index, min_distance_traveled
-    
-    def __init__(self, batch, group):
-        self.completed_traversals = [False] * len(config_data.player_data)
 
     def mark_player_done(self, player_index):
         self.completed_traversals[player_index] = True
@@ -141,7 +140,9 @@ class Scoreboard:
         self.update_distance_to_exit()
         self.update_distance_traveled()
         self.update_nodes_visited()
+        print(f"all_players_completed: {self.all_players_completed()}")
         if self.all_players_completed():
+            print(f"All players have completed their traversals.")
             winner_index, winning_distance = self.find_winner()
             if winner_index != -1:
                 winner_name = config_data.player_data[winner_index][0]
