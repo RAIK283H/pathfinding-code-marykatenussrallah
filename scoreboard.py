@@ -123,23 +123,6 @@ class Scoreboard:
             nodes_visited = len(global_game_data.graph_paths[index])
             self.player_nodes_display[index][0].text = "Amount Nodes Visited: " + str(nodes_visited)
         
-    def determine_winner(self):
-        if not self.all_players_completed():
-            return
-        min_dist = 10000000000
-        winner_index = -1
-        for i, player_object in enumerate(global_game_data.player_objects):
-            if player_object.player_config_data.is_test_player:
-                continue
-
-            total_dist = player_object.distance_traveled
-            if total_dist < min_dist:
-                min_dist = total_dist
-                winner_index = i
-
-            if winner_index != -1:
-                winner_name = config_data.player_data[winner_index][0]
-                self.winner_label.text = f"Winner: {winner_name} with Distance: {min_dist}"
 
 
     def update_scoreboard(self):
