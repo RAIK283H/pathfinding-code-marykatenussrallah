@@ -34,7 +34,7 @@ def get_random_path():
         if neighborIndex < len(currGraph):
             neighborIndex = nextNode
             neighbors = currGraph[neighborIndex][1]
-    return [1,2]
+    return randomPath
 
 
 def get_dfs_path():   
