@@ -21,7 +21,6 @@ class Scoreboard:
         self.number_of_stats = 5
         self.base_height_offset = 20
         self.font_size = 16
-        self.completed_traversals = [False] * len(config_data.player_data)
 
         self.distance_to_exit_label = pyglet.text.Label('Direct Distance To Exit : 0', x=0, y=0,
                                                         font_name='Arial', font_size=self.font_size, batch=batch, group=group)
@@ -62,6 +61,16 @@ class Scoreboard:
                                                     font_size=self.font_size, batch=batch, group=group, color=player[2][colors.TEXT_INDEX])
             self.player_nodes_display.append(
                 (nodes_visited_label, player))
+            
+            self.winner_label = pyglet.text.Label('Winner: None',
+                                                  x=0,
+                                                  y=0,
+                                                  font_name='Arial',
+                                                  font_size=self.font_size,
+                                                  batch=batch,
+                                                  group=group)
+            self.winner_label.x = config_data.window_width - self.stat_width
+            self.winner_label.y = config_data.window_height - self.base_height_offset - self.base_height_offset * 6.5
 
     def update_elements_locations(self):
         self.distance_to_exit_label.x = config_data.window_width - self.stat_width
@@ -113,26 +122,25 @@ class Scoreboard:
         for index in range(len(config_data.player_data)):
             nodes_visited = len(global_game_data.graph_paths[index])
             self.player_nodes_display[index][0].text = "Amount Nodes Visited: " + str(nodes_visited)
-
-    def find_winner(self):
-        min_distance_traveled = 100000
+        
+    def determine_winner(self):
+        if not self.all_players_completed():
+            return
+        min_dist = 10000000000
         winner_index = -1
         for i, player_object in enumerate(global_game_data.player_objects):
-            if player_object.player_config_data[0] == "Test Player" and not player_object.reached_target:
+            if player_object.player_config_data.is_test_player:
                 continue
-            distance_traveled = player_object.distance_traveled
 
-            if distance_traveled < min_distance_traveled:
-                min_distance_traveled = distance_traveled
+            total_dist = player_object.distance_traveled
+            if total_dist < min_dist:
+                min_dist = total_dist
                 winner_index = i
-        return winner_index, min_distance_traveled
 
-    def mark_player_done(self, player_index):
-        self.completed_traversals[player_index] = True
+            if winner_index != -1:
+                winner_name = config_data.player_data[winner_index][0]
+                self.winner_label.text = f"Winner: {winner_name} with Distance: {min_dist}"
 
-    def all_players_completed(self):
-        return all(self.completed_traversals)
-        
 
     def update_scoreboard(self):
         self.update_elements_locations()
@@ -140,12 +148,4 @@ class Scoreboard:
         self.update_distance_to_exit()
         self.update_distance_traveled()
         self.update_nodes_visited()
-        print(f"all_players_completed: {self.all_players_completed()}")
-        if self.all_players_completed():
-            print(f"All players have completed their traversals.")
-            winner_index, winning_distance = self.find_winner()
-            if winner_index != -1:
-                winner_name = config_data.player_data[winner_index][0]
-                print(f"The winner is {winner_name} with a distance of {winning_distance}!")
-            self.completed_traversals = [False] *len(config_data.player_data)
         
