@@ -57,6 +57,7 @@ def check_hamiltonian_cycle(graph, path):
     # sets exit_node equal to the last node in the graph
     exit_node = len(graph)-1
     # checks to see if the first node is adjacent to exit node and returns if it's true or not
-    print(f"path[-1]: {path[-1]} and graph[exit_node][1]: {graph[exit_node][1]}")
+    print(f"path[exit_node]: {path[exit_node]} and graph[0][1]: {graph[0][1]} exit_node: {exit_node}")
     # print(f"graph[exit_node][1]: {graph[exit_node][1]}")
-    return path[-1] in graph[exit_node][1]
+    print(f"return: {path[exit_node] in graph[0][1]}")
+    return path[exit_node] in graph[0][1]
