@@ -3,6 +3,7 @@ import unittest
 import pathing
 import global_game_data
 import graph_data
+import permutation
 
 
 class TestPathFinding(unittest.TestCase):
@@ -39,6 +40,25 @@ class TestPathFinding(unittest.TestCase):
         expected = [0, 1, 2, 3]
         actual = pathing.get_bfs_path()
         self.assertEqual(expected, actual)
+
+    def test_hamiltonian_cycles(self):
+        graph = graph_data.graph_data[0]
+        n = len(graph)
+        for perm in permutation.generate_permutations(n):
+            path = [0] + perm + [n-1]
+            actual = permutation.check_hamiltonian_cycle(graph, path)
+            expected = False
+            self.assertEqual(actual, expected)
+
+    def test_hamiltonian_cycles_true(self):
+        graph = graph_data.hamiltonian_cycle
+        n = len(graph)
+        for perm in permutation.generate_permutations(n):
+            path = [0] + perm + [0]
+            actual = permutation.check_hamiltonian_cycle(graph, path)
+            print(f"actual: {actual}")
+            expected = True
+            self.assertEqual(actual, expected)
 
 
 
