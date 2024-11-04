@@ -11,8 +11,8 @@ for perm in permutation.generate_permutations(n):
     path = [0] + perm + [n-1]
     if permutation.check_hamiltonian_cycle(graph, path):
         print(f"Hamiltonitan cycle found: {path}")
-    # else:
-    #     print(f"Not Hamiltonian cycle {path}")
+    else:
+        print(f"Hamiltonian cycle found: {permutation.check_hamiltonian_cycle(graph, path)} path: {path}")
 
 graph_index = 0
 graph = graph_data.hamiltonian_cycle
@@ -21,3 +21,5 @@ for perm in permutation.generate_permutations(n):
     path = [0] + perm + [n-1]
     if permutation.check_hamiltonian_cycle(graph, path):
         print(f"Hamiltonitan cycle found: {path}")
+    else:
+        print(f"Hamiltonian cycle found: {permutation.check_hamiltonian_cycle(graph, path)} path: {path}")

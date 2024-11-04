@@ -2,7 +2,7 @@ from itertools import permutations
 
 def generate_permutations(n):
     # excludes start and end nodes
-    perm = list(range(1, n))
+    perm = list(range(1, n-1))
     # this makes all of the elements in the list point left to begin
     direction = [-1] * (n-1)
 
@@ -17,6 +17,11 @@ def generate_permutations(n):
         reverse_larger_elements(perm, direction, perm[mobile])
         # allows function to access the permutation and still go back into function here
         yield perm[:]
+
+# def generate_permutations(n):
+#     perm = list(range(1, n-1))
+#     for p in generate_permutations(perm):
+        # yield list(p)
 
 def find_largest_mobile(perm, direction):
     # sets mobile to equal an element not in the list
@@ -50,6 +55,8 @@ def check_hamiltonian_cycle(graph, path):
         if next_node not in graph[current_node][1]:
             return False
     # sets exit_node equal to the last node in the graph
-    exit_node = len(graph) -1
+    exit_node = len(graph)-1
     # checks to see if the first node is adjacent to exit node and returns if it's true or not
+    print(f"path[-1]: {path[-1]} and graph[exit_node][1]: {graph[exit_node][1]}")
+    # print(f"graph[exit_node][1]: {graph[exit_node][1]}")
     return path[-1] in graph[exit_node][1]
