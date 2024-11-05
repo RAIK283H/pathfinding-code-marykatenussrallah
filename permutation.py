@@ -1,4 +1,6 @@
 from itertools import permutations
+import itertools
+import math
 
 def generate_permutations(n):
     # excludes start and end nodes
@@ -52,3 +54,27 @@ def check_hamiltonian_cycle(graph, path):
     # sets exit_node equal to the last node in the graph
     exit_node = len(graph)-1
     return path[exit_node] in graph[0][1]
+
+def calculate_distance(graph, path):
+    distance = 0
+    for i in range(len(path) - 1):
+        node_a, node_b = path[i], path[i+1]
+        x1, y1 = graph[node_a][0]
+        x2, y2 = graph[node_b][0]
+        distance += math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+    return distance
+
+def find_optimal_hamiltonian_cycles(graph):
+    n = len(graph)
+    min_distance = float('inf')
+    optimal_cycles = []
+    for perm in itertools.permutations(range(1, n-1)):
+        path = [0] + list(perm) + [n-1]
+        if check_hamiltonian_cycle(graph, path):
+            dist = calculate_distance(graph, path)
+            if dist < min_distance:
+                min_distance = dist
+                optimal_cycles = [path]
+            elif dist == min_distance:
+                optimal_cycles.append(path)
+    return optimal_cycles, min_distance
