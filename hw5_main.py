@@ -2,6 +2,28 @@ import graph_data
 import permutation
 from itertools import permutations
 
+for graph in graph_data.graph_data:
+    hamiltonian_cycles = []
+    optimal_cycles = []
+    shortest_distance = 100000000
+
+    for perm in permutation.generate_permutations(len(graph)):
+        path = [0] + perm + [len(graph) - 1]
+        if permutation.check_hamiltonian_cycle(graph, path):
+            distance = permutation.calculate_distance(graph, path)
+            print(f"Hamiltonitan cycle found: {path}")
+            if distance < shortest_distance:
+                shortest_distance = distance
+                optimal_cycles = [path]
+            elif distance == shortest_distance:
+                optimal_cycles.append(path)
+        else:
+                print(f"Hamiltonian cycle found: False")
+    print(f"Optimal Hamiltonian cycles: {optimal_cycles}")
+
+    largest_clique = permutation.find_largest_clique(graph)
+    print(f"Largest clique in graph: {largest_clique}")
+
 
 # graph_index = 1
 # graph = graph_data.graph_data[graph_index]
@@ -29,22 +51,3 @@ from itertools import permutations
 #         print(f"Hamiltonitan cycle found: {path}")
 #     else:
 #         print(f"Hamiltonian cycle found: {permutation.check_hamiltonian_cycle(graph, path)} path: {path}")
-
-for graph in graph_data.graph_data:
-    hamiltonian_cycles = []
-    optimal_cycles = []
-    shortest_distance = 100000000
-
-    for perm in permutation.generate_permutations(len(graph)):
-        path = [0] + perm + [len(graph) - 1]
-        if permutation.check_hamiltonian_cycle(graph, path):
-            distance = permutation.calculate_distance(graph, path)
-            print(f"Hamiltonitan cycle found: {path}")
-            if distance < shortest_distance:
-                shortest_distance = distance
-                optimal_cycles = [path]
-            elif distance == shortest_distance:
-                optimal_cycles.append(path)
-        else:
-                print(f"Hamiltonian cycle found: False")
-    print(f"Optimal Hamiltonian cycles: {optimal_cycles}")

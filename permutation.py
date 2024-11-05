@@ -78,3 +78,22 @@ def find_optimal_hamiltonian_cycles(graph):
             elif dist == min_distance:
                 optimal_cycles.append(path)
     return optimal_cycles, min_distance
+
+def is_clique(graph, nodes):
+    for i in range(len(nodes)):
+        for j in range(i + 1, len(nodes)):
+            if nodes[j] not in graph[nodes[i]][1]:
+                return False
+    return True
+
+def find_largest_clique(graph):
+    n = len(graph)
+    max_clique = []
+    nodes = list(range(1, n-1))
+    for subset_size in range(len(nodes), 0, -1):
+        for subset in itertools.combinations(nodes, subset_size):
+            if is_clique(graph, subset):
+                if len(subset) > len(max_clique):
+                    max_clique = subset
+    return max_clique
+                                     
