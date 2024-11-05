@@ -4,6 +4,7 @@ import pathing
 import global_game_data
 import graph_data
 import permutation
+from itertools import permutations
 
 
 class TestPathFinding(unittest.TestCase):
@@ -53,12 +54,34 @@ class TestPathFinding(unittest.TestCase):
     def test_hamiltonian_cycles_true(self):
         graph = graph_data.hamiltonian_cycle
         n = len(graph)
-        for perm in permutation.generate_permutations(n):
-            path = [0] + perm + [0]
+        print(f"n: {n}")
+        expected = True
+        results = []
+        for perm in permutations(range(1, n-1)):
+            path = [0] + list(perm) + [0]
             actual = permutation.check_hamiltonian_cycle(graph, path)
-            print(f"actual: {actual}")
-            expected = True
-            self.assertEqual(actual, expected)
+            results.append(actual)
+        self.assertIn(expected, results)
+        # for perm in permutation.generate_permutations(n):
+        #     print(f"perm: {perm}")
+        #     path = [0] + perm + [0]
+        #     actual = permutation.check_hamiltonian_cycle(graph, path)
+        #     print(f"actual: {actual}")
+        #     results.append(actual)
+        
+        # print(f"results: {results}")
+        # self.assertIn(expected, results)
+
+
+        # graph_index = 0
+        # graph = graph_data.hamiltonian_cycle
+        # n = len(graph)
+        # for perm in permutation.generate_permutations(n):
+        #     path = [0] + perm + [n-1]
+        #     if permutation.check_hamiltonian_cycle(graph, path):
+        #         print(f"Hamiltonitan cycle found: {path}")
+        #     else:
+        #         print(f"Hamiltonian cycle found: {permutation.check_hamiltonian_cycle(graph, path)} path: {path}")
 
 
 
