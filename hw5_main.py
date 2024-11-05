@@ -7,12 +7,21 @@ graph_index = 1
 graph = graph_data.graph_data[graph_index]
 n = len(graph)
 
-for perm in permutation.generate_permutations(n):
-    path = [0] + perm + [n-1]
-    if permutation.check_hamiltonian_cycle(graph, path):
-        print(f"Hamiltonitan cycle found: {path}")
-    else:
-        print(f"Hamiltonian cycle found: {permutation.check_hamiltonian_cycle(graph, path)} path: {path}")
+for graph in graph_data.graph_data:
+    n = len(graph)
+    for perm in permutation.generate_permutations(n):
+        path = [0] + perm + [n-1]
+        if permutation.check_hamiltonian_cycle(graph, path):
+            print(f"Hamiltonitan cycle found: {path}")
+        else:
+            print(f"Hamiltonian cycle found: False")
+
+# for perm in permutation.generate_permutations(n):
+#     path = [0] + perm + [n-1]
+#     if permutation.check_hamiltonian_cycle(graph, path):
+#         print(f"Hamiltonitan cycle found: {path}")
+#     else:
+#         print(f"Hamiltonian cycle found: {permutation.check_hamiltonian_cycle(graph, path)} path: {path}")
 
 graph_index = 0
 graph = graph_data.hamiltonian_cycle
