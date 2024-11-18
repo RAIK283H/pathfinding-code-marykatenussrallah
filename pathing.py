@@ -3,6 +3,7 @@ import global_game_data
 from numpy import random
 import numpy as np
 from collections import deque
+import heapq
 
 
 def set_current_graph_paths():
@@ -34,7 +35,7 @@ def get_random_path():
         if neighborIndex < len(currGraph):
             neighborIndex = nextNode
             neighbors = currGraph[neighborIndex][1]
-    return randomPath
+    return [1,2]
 
 
 def get_dfs_path():   
@@ -142,6 +143,65 @@ def get_bfs_path():
 
 
 def get_dijkstra_path():
-    return [1,2]
+    curr_graph = graph_data.graph_data[global_game_data.current_graph_index]
+    start_node_index = 0
+    target_node_index = global_game_data.target_node[global_game_data.current_graph_index]
+    end_node_index = len(curr_graph) - 1
 
+# makes a path from the start node to the target node
+    path_to_target = dijkstra(curr_graph, start_node_index, target_node_index)
+    validate_path_segment(path_to_target, start_node_index, target_node_index)
+    
+#     makes a path from the target node to the end node
+    path_to_exit = dijkstra(curr_graph, target_node_index, end_node_index)
+    validate_path_segment(path_to_exit, target_node_index, end_node_index)
 
+# combines both paths already made to make one path from start node to exit node
+    full_path = combine_paths(path_to_target, path_to_exit, curr_graph)
+
+    return full_path
+
+def dijkstra(graph, start, goal):
+     distances = {}
+     for node in range(len(graph)):
+          distances[node] = float('inf')
+     # distances = {node: float('inf) for node in range(len(graph))')}
+     distances[start] = 0
+     priority_queue = [(0, start)]
+     parents = {start: None}
+
+     while priority_queue:
+          current_distance, current_node = heapq.heappop(priority_queue)
+
+          if current_node == goal:
+               break
+
+          for neighbor in graph[current_node][1]:
+               distance = current_distance + 1
+               if distance < distances[neighbor]:
+                    distances[neighbor] = distance
+                    heapq.heappush(priority_queue, (distance, neighbor))
+                    parents[neighbor] = current_node
+
+     return reconstruct_path(parents, goal)
+
+def reconstruct_path(parents, goal):
+     path = []
+     node = goal
+     while node is not None:
+          path.append(node)
+          node = parents.get(node)
+     return list(reversed(path))
+
+def validate_path_segment(path, expected_start, expected_end):
+     # makes sure the path starts and ends where it is supposed to
+     assert path[0] == expected_start, f"Path does not start at the expected start node {expected_start}"
+     assert path[-1] == expected_end, f"Path does not end at the expected end node {expected_end}"
+
+def combine_paths(path1, path2, graph):
+     combined_path = path1[:-1] + path2
+     for i in range(len(combined_path) - 1):
+          current_node = combined_path[i]
+          next_node = combined_path[i+1]
+          assert next_node in graph[current_node][1], f"Edge missing between {current_node} and {next_node}"
+     return combined_path

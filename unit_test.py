@@ -60,8 +60,13 @@ class TestPathFinding(unittest.TestCase):
             path = [0] + list(perm) +[n-1]
             actual = permutation.check_hamiltonian_cycle(graph, path)
             results.append(actual)
-        print(f"results: {results}")
         self.assertIn(expected, results)
+
+    def test_dijkstras(self):
+        expected_path = [[0, 1, 5, 9, 10, 11, 15]]
+        actual = []
+        actual.append(pathing.get_dijkstra_path())
+        self.assertEqual(expected_path, actual)
 
 
 
