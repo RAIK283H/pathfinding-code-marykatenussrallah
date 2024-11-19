@@ -35,7 +35,7 @@ def get_random_path():
         if neighborIndex < len(currGraph):
             neighborIndex = nextNode
             neighbors = currGraph[neighborIndex][1]
-    return [1,2]
+    return randomPath
 
 
 def get_dfs_path():   
@@ -205,3 +205,5 @@ def combine_paths(path1, path2, graph):
           next_node = combined_path[i+1]
           assert next_node in graph[current_node][1], f"Edge missing between {current_node} and {next_node}"
      return combined_path
+
+
