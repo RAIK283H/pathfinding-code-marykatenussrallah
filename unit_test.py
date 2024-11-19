@@ -69,6 +69,5 @@ class TestPathFinding(unittest.TestCase):
         self.assertEqual(expected_path, actual)
 
 
-
 if __name__ == '__main__':
     unittest.main()
