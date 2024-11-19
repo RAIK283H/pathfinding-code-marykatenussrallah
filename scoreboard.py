@@ -62,15 +62,15 @@ class Scoreboard:
             self.player_nodes_display.append(
                 (nodes_visited_label, player))
             
-            self.winner_label = pyglet.text.Label('Winner: None',
-                                                  x=0,
-                                                  y=0,
-                                                  font_name='Arial',
-                                                  font_size=self.font_size,
-                                                  batch=batch,
-                                                  group=group)
-            self.winner_label.x = config_data.window_width - self.stat_width
-            self.winner_label.y = config_data.window_height - self.base_height_offset - self.base_height_offset * 6.5
+            # self.winner_label = pyglet.text.Label('Winner: None',
+            #                                       x=0,
+            #                                       y=0,
+            #                                       font_name='Arial',
+            #                                       font_size=self.font_size,
+            #                                       batch=batch,
+            #                                       group=group)
+            # self.winner_label.x = config_data.window_width - self.stat_width
+            # self.winner_label.y = config_data.window_height - self.base_height_offset - self.base_height_offset * 6.5
 
     def update_elements_locations(self):
         self.distance_to_exit_label.x = config_data.window_width - self.stat_width
@@ -122,8 +122,6 @@ class Scoreboard:
         for index in range(len(config_data.player_data)):
             nodes_visited = len(global_game_data.graph_paths[index])
             self.player_nodes_display[index][0].text = "Amount Nodes Visited: " + str(nodes_visited)
-        
-
 
     def update_scoreboard(self):
         self.update_elements_locations()
