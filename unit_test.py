@@ -5,6 +5,8 @@ import global_game_data
 import graph_data
 import permutation
 from itertools import permutations
+from f_w import floyd_warshall, reconstruct_path, adjacency_list_to_matrix
+
 
 
 class TestPathFinding(unittest.TestCase):
@@ -67,6 +69,21 @@ class TestPathFinding(unittest.TestCase):
         actual = []
         actual.append(pathing.get_dijkstra_path())
         self.assertEqual(expected_path, actual)
+
+    def test_floyd_warshall(self):
+            # Test graph as adjacency list
+            test_graph = [
+                [(0, 0), [1, 2]],
+                [(1, 0), [0, 2]],
+                [(2, 0), [0, 1]],
+            ]
+            matrix = adjacency_list_to_matrix(test_graph)
+            dist, parent = floyd_warshall(matrix)
+
+            # Verify shortest paths
+            self.assertEqual(dist[0][2], 1)
+            self.assertEqual(dist[1][0], 1)
+            self.assertEqual(reconstruct_path(parent, 0, 2), [0, 2])
 
 
 if __name__ == '__main__':
