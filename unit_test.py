@@ -4,6 +4,7 @@ import pathing
 import global_game_data
 import graph_data
 import permutation
+import f_w
 from itertools import permutations
 from f_w import floyd_warshall, reconstruct_path, adjacency_list_to_matrix
 
@@ -82,7 +83,6 @@ class TestPathFinding(unittest.TestCase):
             self.assertEqual(dist[0][2], 1)
             self.assertEqual(dist[1][0], 1)
             self.assertEqual(reconstruct_path(parent, 0, 2), [0, 2])
-
 
 if __name__ == '__main__':
     unittest.main()
