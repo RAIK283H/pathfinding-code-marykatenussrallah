@@ -71,7 +71,6 @@ class TestPathFinding(unittest.TestCase):
         self.assertEqual(expected_path, actual)
 
     def test_floyd_warshall(self):
-            # Test graph as adjacency list
             test_graph = [
                 [(0, 0), [1, 2]],
                 [(1, 0), [0, 2]],
@@ -80,7 +79,6 @@ class TestPathFinding(unittest.TestCase):
             matrix = adjacency_list_to_matrix(test_graph)
             dist, parent = floyd_warshall(matrix)
 
-            # Verify shortest paths
             self.assertEqual(dist[0][2], 1)
             self.assertEqual(dist[1][0], 1)
             self.assertEqual(reconstruct_path(parent, 0, 2), [0, 2])

@@ -13,7 +13,6 @@ def set_current_graph_paths():
     global_game_data.graph_paths.append(get_dfs_path())
     global_game_data.graph_paths.append(get_bfs_path())
     global_game_data.graph_paths.append(get_dijkstra_path())
-    global_game_data.graph_paths.append(get_floyd_warshall_path)
 
 
 def get_test_path():
@@ -207,71 +206,6 @@ def combine_paths(path1, path2, graph):
           assert next_node in graph[current_node][1], f"Edge missing between {current_node} and {next_node}"
      return combined_path
 
-# NEW STUFF
-def get_floyd_warshall_path():
-    curr_graph = graph_data.graph_data[global_game_data.current_graph_index]
-    start_node = 0
-    target_node = global_game_data.target_node[global_game_data.current_graph_index]
-    end_node = len(curr_graph) - 1
-
-    shortest_paths, next_node = floyd_warshall(curr_graph)
-
-    start_to_target_path = reconstruct_path_fw(shortest_paths, next_node, start_node, target_node)
-    validate_path_segment(start_to_target_path, start_node, target_node)
-
-    target_to_exit_path = reconstruct_path_fw(shortest_paths, next_node, target_node, end_node)
-    validate_path_segment(target_to_exit_path, target_node, end_node)
-
-    floyd_warshall_path = combine_paths(start_to_target_path, target_to_exit_path, curr_graph)
-
-    return floyd_warshall_path
-
-
-def floyd_warshall(graph):
-    num_nodes = len(graph)
-    dist = [[float('inf')] * num_nodes for _ in range(num_nodes)]
-    next_node = [[-1] * num_nodes for _ in range(num_nodes)]
-
-    # Initialize distances and next nodes
-    for i in range(num_nodes):
-        dist[i][i] = 0
-        for neighbor in graph[i][1]:
-            dist[i][neighbor] = 1  # Replace 1 with edge weight if using weighted graphs
-            next_node[i][neighbor] = neighbor
-
-    # Floyd-Warshall algorithm
-    for k in range(num_nodes):
-        for i in range(num_nodes):
-            for j in range(num_nodes):
-                if dist[i][k] + dist[k][j] < dist[i][j]:
-                    dist[i][j] = dist[i][k] + dist[k][j]
-                    next_node[i][j] = next_node[i][k]
-
-    return dist, next_node
-
-
-def reconstruct_path_fw(dist, next_node, start, end):
-    if next_node[start][end] == -1:
-        return []  # No path exists
-    path = [start]
-    while start != end:
-        start = next_node[start][end]
-        path.append(start)
-    return path
-
-
-def validate_path_segment(path, expected_start, expected_end):
-    assert path[0] == expected_start, f"Path does not start at the expected start node {expected_start}"
-    assert path[-1] == expected_end, f"Path does not end at the expected end node {expected_end}"
-
-
-def combine_paths(path1, path2, graph):
-    combined_path = path1[:-1] + path2
-    for i in range(len(combined_path) - 1):
-        current_node = combined_path[i]
-        next_node = combined_path[i + 1]
-        assert next_node in graph[current_node][1], f"Edge missing between {current_node} and {next_node}"
-    return combined_path
 
 
 
