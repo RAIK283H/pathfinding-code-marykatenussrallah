@@ -14,7 +14,6 @@ def set_current_graph_paths():
     global_game_data.graph_paths.append(get_dfs_path())
     global_game_data.graph_paths.append(get_bfs_path())
     global_game_data.graph_paths.append(get_dijkstra_path())
-    global_game_data.graph_paths.append(get_fw_path())
 
 
 def get_test_path():
@@ -207,31 +206,6 @@ def combine_paths(path1, path2, graph):
           next_node = combined_path[i+1]
           assert next_node in graph[current_node][1], f"Edge missing between {current_node} and {next_node}"
      return combined_path
-
-def get_fw_path():
-    
-    curr_graph = graph_data.graph_data[global_game_data.current_graph_index]
-    start_node = 0
-    target_node = global_game_data.target_node[global_game_data.current_graph_index]
-    end_node = len(curr_graph) - 1
-
-    if not curr_graph:
-        raise ValueError("The current graph is empty.")
-    if target_node >= len(curr_graph):
-        raise IndexError(f"Target node {target_node} is out of bounds for the current graph.")
-
-    graph_matrix = f_w.adjacency_list_to_matrix(curr_graph)
-    _, parent_matrix = f_w.floyd_warshall(graph_matrix)
-
-    path_to_target = reconstruct_path(parent_matrix[target_node], start_node, target_node)
-    validate_path_segment(path_to_target, start_node, target_node)
-
-    path_to_end = reconstruct_path(parent_matrix, target_node, end_node)
-    validate_path_segment(path_to_end, target_node, end_node)
-
-    full_path = combine_paths(path_to_target, path_to_end, curr_graph)
-
-    return full_path
 
 
 
