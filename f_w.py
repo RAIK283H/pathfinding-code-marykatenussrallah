@@ -4,8 +4,8 @@ import math
 
 def floyd_warshall(graph_matrix):
     n = len(graph_matrix)
-    dist = [[math.inf] * n for _ in range(n)]
-    parent = [[None] * n for _ in range(n)]
+    dist = [[math.inf] * n for i in range(n)]
+    parent = [[None] * n for i in range(n)]
 
     for i in range(n):
         for j in range(n):
@@ -26,7 +26,7 @@ def floyd_warshall(graph_matrix):
 
 def reconstruct_path(parent, start, end):
     if parent[start][end] is None:
-        return None  # No path
+        return None
     path = []
     while end is not None:
         path.append(end)
@@ -35,9 +35,9 @@ def reconstruct_path(parent, start, end):
 
 def adjacency_list_to_matrix(graph):
     n = len(graph)
-    matrix = [[math.inf] * n for _ in range(n)]
+    matrix = [[math.inf] * n for i in range(n)]
     for i, (coords, neighbors) in enumerate(graph):
         for neighbor in neighbors:
-            matrix[i][neighbor] = 1  # Replace with actual weights if available
-        matrix[i][i] = 0  # Distance to self is 0
+            matrix[i][neighbor] = 1
+        matrix[i][i] = 0
     return matrix
